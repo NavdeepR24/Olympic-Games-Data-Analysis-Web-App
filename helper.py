@@ -55,15 +55,14 @@ def most_successful(df, sport):
 def yearwise_medal_tally(df, country):
     temp_df = df.dropna(subset=['Medal'])
     temp_df = temp_df.drop_duplicates(
-        subset=['Team','NOC','Games','Year','City','Sport','Event','Medal']
+        subset=['Team','NOC','Year','City','Sport','Event','Medal']
     )
     new_df = temp_df[temp_df['region'] == country]
     return new_df.groupby('Year').count()['Medal'].reset_index()
 
 def country_event_heatmap(df, country):
-    temp_df = df.dropna(subset=['Medal'])
-    temp_df = temp_df.drop_duplicates(
-        subset=['Team','NOC','Games','Year','City','Sport','Event','Medal']
+    temp_df = df.drop_duplicates(
+        subset=['Team','NOC','Year','City','Sport','Event','Medal']
     )
     new_df = temp_df[temp_df['region'] == country]
     return new_df.pivot_table(
@@ -72,8 +71,7 @@ def country_event_heatmap(df, country):
     ).fillna(0)
 
 def most_successful_country_wise(df, country):
-    temp_df = df.dropna(subset=['Medal'])
-    temp_df = temp_df[temp_df['region'] == country]
+    temp_df = df[df['region'] == country]
     return (temp_df['Name']
             .value_counts()
             .reset_index()
@@ -81,3 +79,24 @@ def most_successful_country_wise(df, country):
             .merge(df[['Name','Sport']].drop_duplicates(),
                    on='Name', how='left')
             .rename(columns={'count': 'Medals'}))
+
+#athlete wise analysis
+def weight_v_height(df, sport):
+    athlete_df = df.drop_duplicates(subset=['Name', 'Sport'])
+    if sport != 'Overall':
+        athlete_df = athlete_df[athlete_df['Sport'] == sport]
+    return athlete_df
+
+def men_vs_women(df):
+    athlete_df = df.drop_duplicates(subset=['Name','Year','Sex'])
+
+    men = athlete_df[athlete_df['Sex'] == 'M'].groupby('Year')['Name'].count().reset_index()
+    women = athlete_df[athlete_df['Sex'] == 'F'].groupby('Year')['Name'].count().reset_index()
+
+    final = men.merge(women, on='Year', how='left')
+    final.rename(columns={'Name_x':'Male','Name_y':'Female'}, inplace=True)
+
+    final.fillna(0, inplace=True)
+
+    return final
+
