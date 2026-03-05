@@ -1,5 +1,3 @@
-import numpy as np
-
 #for medal tally
 def fetch_medal_tally(df, year, country):
     medal_df = df.drop_duplicates(
