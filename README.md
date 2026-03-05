@@ -26,7 +26,7 @@ An interactive data analysis web application built with **Python** and **Streaml
 
 ## 🎥 Demo
 
-> Coming soon — Streamlit Cloud deployment link
+> https://olympic-games-data-analysis-web-app-zzb4cjvm4kvgzrrvhceqym.streamlit.app/
 
 ---
 
